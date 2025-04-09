@@ -39,6 +39,12 @@ async def chat(request: Request):
     try:
         response = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=data)
         result = response.json()
+
+        # ✅ Gestion explicite si 'choices' absent
+        if "choices" not in result:
+        return {"error": f"Réponse inattendue d'OpenRouter : {result}"}
+        
         return {"response": result["choices"][0]["message"]["content"]}
     except Exception as e:
         return {"error": str(e)}
+
